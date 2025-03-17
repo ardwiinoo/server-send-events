@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="id">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Notifikasi SSE</title>
+        <script src="https://cdn.tailwindcss.com"></script>
+    </head>
+    <body class="bg-gray-100">
+        <!-- Navbar -->
+        <nav class="bg-blue-600 text-white p-4 flex justify-between">
+            <h1 class="text-xl font-bold">Notif SSE</h1>
+            <button
+                id="notif-btn"
+                class="relative bg-white text-blue-600 px-4 py-2 rounded-lg font-semibold"
+            >
+                🔔 Notifikasi
+                <span
+                    id="notif-badge"
+                    class="hidden absolute -top-1 -right-1 bg-red-500 text-white text-xs px-2 py-1 rounded-full"
+                    >0</span
+                >
+            </button>
+        </nav>
+
+        <!-- Dropdown Notifikasi -->
+        <div
+            id="notif-dropdown"
+            class="hidden absolute right-4 mt-2 w-64 bg-white shadow-lg rounded-lg p-4"
+        >
+            <h2 class="font-bold text-gray-700">Notifikasi</h2>
+            <ul id="notif-list" class="mt-2 space-y-2"></ul>
+        </div>
+
+        <script>
+            const notifBtn = document.getElementById('notif-btn')
+            const notifDropdown = document.getElementById('notif-dropdown')
+            const notifList = document.getElementById('notif-list')
+            const notifBadge = document.getElementById('notif-badge')
+            let notifCount = 0
+
+            notifBtn.addEventListener('click', () => {
+                notifDropdown.classList.toggle('hidden')
+            })
+
+            function addNotification(message) {
+                const li = document.createElement('li')
+                li.className =
+                    'bg-gray-200 p-2 rounded cursor-pointer hover:bg-gray-300 transition'
+                li.textContent = message
+
+                // Event klik untuk menandai sebagai "dibaca"
+                li.addEventListener('click', () => {
+                    li.remove()
+                    notifCount--
+                    updateBadge()
+                })
+
+                notifList.appendChild(li)
+
+                notifCount++
+                updateBadge()
+            }
+
+            function updateBadge() {
+                if (notifCount > 0) {
+                    notifBadge.textContent = notifCount
+                    notifBadge.classList.remove('hidden')
+                } else {
+                    notifBadge.classList.add('hidden')
+                }
+            }
+
+            // Simulasi notifikasi masuk
+            setTimeout(
+                () => addNotification('Produk A baru ditambahkan!'),
+                2000
+            )
+            setTimeout(
+                () => addNotification('Produk B baru ditambahkan!'),
+                5000
+            )
+        </script>
+    </body>
+</html>
