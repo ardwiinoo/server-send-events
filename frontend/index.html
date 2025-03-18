@@ -49,7 +49,6 @@
                     'bg-gray-200 p-2 rounded cursor-pointer hover:bg-gray-300 transition'
                 li.textContent = message
 
-                // Event klik untuk menandai sebagai "dibaca"
                 li.addEventListener('click', () => {
                     li.remove()
                     notifCount--
@@ -71,15 +70,20 @@
                 }
             }
 
-            // Simulasi notifikasi masuk
-            setTimeout(
-                () => addNotification('Produk A baru ditambahkan!'),
-                2000
+            // 🔥 Koneksi ke SSE dari backend
+            const eventSource = new EventSource(
+                'http://localhost:3000/api/events'
             )
-            setTimeout(
-                () => addNotification('Produk B baru ditambahkan!'),
-                5000
-            )
+
+            eventSource.onmessage = (event) => {
+                const data = JSON.parse(event.data)
+                addNotification(data.message)
+            }
+
+            eventSource.onerror = (err) => {
+                console.error('SSE Error:', err)
+                eventSource.close()
+            }
         </script>
     </body>
 </html>
